@@ -11,6 +11,7 @@ This is a Django REST API for managing bank accounts and transactions. The proje
 - Transfer money between accounts
 - Retrieve transaction histories for accounts
 - Swagger documentation for API endpoints
+![All Endpoints Image not Found](all_endpoints.png?raw=true "Title")
 
 ## Requirements
 
@@ -24,8 +25,8 @@ This is a Django REST API for managing bank accounts and transactions. The proje
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/bank_account_kata.git
-   cd bank_account_kata
+   git clone https://github.com/Harib0475/code_sherpas_account_data_test_task.git
+   cd code_sherpas_account_data_test_task
    ```
 
 2. Create and activate a virtual environment:
@@ -103,6 +104,8 @@ This is a Django REST API for managing bank accounts and transactions. The proje
 
 - **List Transactions By Filters**
   - `GET /api/accounts/{id}/transactions/?end_date=2024-12-31&ordering=-date&page=2&page_size=1&start_date=2024-01-01&transaction_type=D`
+    ![Transaction Image not Found](transactions.png?raw=true "Title")
+  
 
 ## Running Tests
 
@@ -110,6 +113,8 @@ To run tests, use the following command:
 ```bash
 python manage.py test
 ```
+![Test Cases Image not Found](test_cases_results.png?raw=true "Title")
+
 
 ## Management Command
 
@@ -117,6 +122,8 @@ The project includes a management command to populate the database with dummy da
 ```bash
 python manage.py populate_data
 ```
+![Populate Data Image not Found](populate_data.png?raw=true "Title")
+
 
 ## Acknowledgements
 

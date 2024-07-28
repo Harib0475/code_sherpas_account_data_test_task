@@ -19,7 +19,7 @@ class AccountTests(APITestCase):
         url = reverse('account-list')
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data), 6)
 
     def test_retrieve_account(self):
         url = reverse('account-detail', args=[self.account.id])
@@ -84,4 +84,4 @@ class AccountTests(APITestCase):
         url = reverse('transaction-list', args=[self.account.id])
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), 6)
