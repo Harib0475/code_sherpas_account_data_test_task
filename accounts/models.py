@@ -1,7 +1,30 @@
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
 
 IBAN_REGEX = r'^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$'
+
+
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        'User',
+        related_name="%(class)s_created_by",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    updated_by = models.ForeignKey(
+        'User',
+        related_name="%(class)s_updated_by",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        abstract = True
 
 
 class Account(models.Model):
@@ -57,3 +80,22 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.get_transaction_type_display()} - {self.amount}"
+
+
+class User(BaseModel, AbstractUser):
+    """
+    The User model extends the AbstractUser model to provide custom user functionalities.
+    """
+
+    email = models.EmailField(
+        blank=False,
+        unique=True,
+        error_messages={'unique': 'This Email already has an account.'}
+    )
+    username = models.CharField(max_length=150, null=True, blank=True)
+    surname = models.CharField(max_length=150, null=True, blank=True)
+    password = models.CharField(max_length=150, null=True, blank=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+    objects = UserManager()
+    profile_picture = models.ImageField(upload_to='photos/', null=True, blank=True)

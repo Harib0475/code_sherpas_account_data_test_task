@@ -1,7 +1,7 @@
 
 # Bank Account
 
-This is a Django REST API for managing bank accounts and transactions. The project includes endpoints for creating accounts, depositing, withdrawing, transferring money, and retrieving transaction histories. Swagger documentation is provided for easy testing and interaction with the API.
+This is a Django REST API for managing bank accounts and transactions. The project includes endpoints for creating accounts, customers, depositing, withdrawing, transferring money, and retrieving transaction histories. Swagger documentation is provided for easy testing and interaction with the API.
 
 ## Features
 
@@ -10,6 +10,7 @@ This is a Django REST API for managing bank accounts and transactions. The proje
 - Withdraw money from an account
 - Transfer money between accounts
 - Retrieve transaction histories for accounts
+- Create and Retrieve Customers
 - Swagger documentation for API endpoints
 ![All Endpoints Image not Found](all_endpoints.png?raw=true "Title")
 
@@ -106,7 +107,11 @@ This is a Django REST API for managing bank accounts and transactions. The proje
   - `GET /api/accounts/{id}/transactions/?end_date=2024-12-31&ordering=-date&page=2&page_size=1&start_date=2024-01-01&transaction_type=D`
     ![Transaction Image not Found](transactions.png?raw=true "Title")
   
-
+- **Retrieve / Update / Delete Customers**
+  - `GET /api/customers/{id}/`
+  - `PUT /api/customers/{id}/`
+  - `DELETE /api/customers/{id}/`
+- 
 ## Running Tests
 
 To run tests, use the following command:

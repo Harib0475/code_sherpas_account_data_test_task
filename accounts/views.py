@@ -1,14 +1,16 @@
 import decimal
 
-from rest_framework import generics, pagination
+from rest_framework import generics, pagination, viewsets
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django_filters import rest_framework as filters
 
-from accounts.models import Account, Transaction
-from accounts.serializers import AccountSerializer, TransactionSerializer
+from accounts.models import Account, Transaction, User
+from accounts.serializers import AccountSerializer, TransactionSerializer, CustomerSerializer
 
 
 class CustomPageNumberPagination(pagination.PageNumberPagination):
@@ -244,3 +246,56 @@ class TransactionListView(generics.ListAPIView):
     def get_queryset(self):
         account_id = self.kwargs['pk']
         return Transaction.objects.filter(account_id=account_id)
+
+
+class CustomerViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing User model instances. This ViewSet allows for
+    retrieving, creating, updating, and deleting user accounts. The viewset
+    requires admin-level permissions and allows handling of file uploads
+    (such as profile pictures) via the MultiPartParser.
+    """
+    queryset = User.objects.all()
+    serializer_class = CustomerSerializer
+    parser_classes = [MultiPartParser]
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        """
+        Returns a filtered queryset of User instances that were created by the
+        currently authenticated user. This ensures that a user can only view
+        the customers they have created.
+        """
+        return User.objects.filter(created_by=self.request.user)
+
+    def perform_create(self, serializer):
+        """
+        Handles the creation of a new User instance. The 'created_by' field is
+        set to the currently authenticated user. If a 'password' is provided
+        in the request, it is hashed using 'set_password' before saving.
+
+        Args:
+            serializer (CustomerSerializer): The serializer containing the
+            validated data for the new User instance.
+        """
+        user = serializer.save(created_by=self.request.user)
+        password = self.request.data.get('password', None)
+        if password:
+            user.set_password(password)
+            user.save()
+
+    def perform_update(self, serializer):
+        """
+        Handles updating an existing User instance. The 'updated_by' field is
+        set to the currently authenticated user. If a 'password' is provided
+        in the request, it is hashed using 'set_password' before saving.
+
+        Args:
+            serializer (CustomerSerializer): The serializer containing the
+            validated data for the User instance being updated.
+        """
+        user = serializer.save(updated_by=self.request.user)
+        password = self.request.data.get('password', None)
+        if password:
+            user.set_password(password)
+            user.save()

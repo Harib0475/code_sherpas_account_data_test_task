@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Account, Transaction
+from .models import Account, Transaction, User
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -20,3 +20,16 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = ['id', 'account', 'date', 'amount', 'transaction_type']
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the User model.
+    """
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'username', 'password', 'surname', 'profile_picture']
+        extra_kwargs = {
+            'password': {'write_only': True},  # Make the password write-only
+        }
